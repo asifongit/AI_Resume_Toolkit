@@ -1,21 +1,25 @@
-from django.shortcuts import render, HttpResponse
+# myapp/views.py
+
+from django.shortcuts import render
 from datetime import datetime
 from myapp.models import Contact
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.shortcuts import render, redirect
 
+
+
+@login_required(login_url='/')
 def index(request):
-
-    context={
+    context = {
         'name': 'i am studing Django'
-        }# This function renders the index.html template when the home page is accessed.    
-    return render(request,'index.html', context)
-
+    }
+    return render(request, 'index.html', context) # UPDATED
 
 def about(request):
-    # return HttpResponse("this is about page")
     return render(request, 'about.html')
 
 def services(request):
-    # return HttpResponse("this is services page")
     return render(request, 'services.html')
 
 def contact(request):
@@ -25,8 +29,9 @@ def contact(request):
         phone = request.POST.get('phone')
         desc = request.POST.get('desc')
         date = datetime.today()
-
         new_contact = Contact(name=name, email=email, phone=phone, desc=desc, date=date)
         new_contact.save()
+        messages.success(request, "Your message has been submitted successfully!")
+        return redirect('myapp:contact')  # Redirect to avoid form resubmission
 
     return render(request, 'contact.html')

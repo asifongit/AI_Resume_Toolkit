@@ -34,10 +34,10 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="/index">Home</a>
+            <a class="nav-link active" href="{% url 'myapp:index' %}">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/about">About Us</a>
+    <a class="nav-link" href="{% url 'myapp:about' %}">About Us</a>
           </li>
           <li class="nav-item dropdown">
             <a
@@ -50,14 +50,14 @@
               Dropdown
             </a>
             <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="/services">Services</a></li>
+              <li><a class="dropdown-item" href="{% url 'myapp:services' %}">Services</a></li>
               <li><a class="dropdown-item" href="#">Another action</a></li>
               <li><hr class="dropdown-divider" /></li>
               <li><a class="dropdown-item" href="#">Something else here</a></li>
             </ul>
           </li>
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="/contact">Contact Us</a>
+            <a class="nav-link active" aria-current="page" href="{% url 'myapp:contact' %}">Contact Us</a>
           </li>
         </ul>
         <form class="d-flex" role="search">

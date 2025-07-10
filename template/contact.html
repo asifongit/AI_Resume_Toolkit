@@ -21,6 +21,14 @@
     class="custom-img"
     alt="...">
     <h1 class="text-center">Contact Us</h1>
+    {% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-success text-center" role="alert">
+      {{ message }}
+    </div>
+  {% endfor %}
+{% endif %}
+
   </dev>
 
 
@@ -28,7 +36,8 @@
     <div class="row justify-content-center">
       <div class="col-md-6"><!-- Centered column -->
   
-        <form method="POST" action="/contact">
+        <form method="POST" action="{% url 'myapp:contact' %}">
+
           <!-- Required in Django -->
           {% csrf_token %}
   
