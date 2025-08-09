@@ -1,10 +1,441 @@
-
 {% extends "base.html" %}
-
-{% block title %}about{% endblock title %}
+{% load static %}
+{% block title %}About{% endblock title %}
 
 {% block body %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>About - AI Resume Toolkit</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-dark: #0a0a0a;
+            --bg-card: #1a1a1a;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0a0;
+            --accent: #6366f1;
+            --accent-hover: #5048e5;
+        }
 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
 
+        .hero-section {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 70vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, transparent 70%);
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.3; }
+            50% { transform: scale(1.1) rotate(180deg); opacity: 0.1; }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }
+
+        .hero-section h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-section .lead {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .btn-hero {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 15px 35px;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-hero:hover {
+            background: var(--accent-hover);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(99, 102, 241, 0.4);
+            color: white;
+        }
+
+        .section {
+            padding: 80px 0;
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+            font-size: 1.1rem;
+        }
+
+        .glass-card {
+            background: rgba(26, 26, 26, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            border-color: var(--accent);
+        }
+
+        .feature-card {
+            background: var(--bg-card);
+            border: 1px solid #333;
+            border-radius: 16px;
+            padding: 2rem;
+            height: 100%;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--accent);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--accent);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--accent);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h4 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .feature-card p {
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .tech-badge {
+            background: var(--bg-card);
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 1rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .tech-badge:hover {
+            border-color: var(--accent);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .tech-badge i {
+            font-size: 1.5rem;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .tech-badge span {
+            display: block;
+            font-weight: 500;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+
+        .profile-section {
+            background: var(--bg-card);
+            border: 1px solid #333;
+            border-radius: 20px;
+            padding: 3rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .profile-section:hover {
+            border-color: var(--accent);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .profile-img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--accent);
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .profile-img:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(99, 102, 241, 0.5);
+        }
+
+        .profile-name {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .profile-title {
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        .profile-description {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .footer {
+            background: #111;
+            border-top: 1px solid #333;
+            padding: 2rem 0;
+            text-align: center;
+        }
+
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .animate-on-scroll.animated {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (max-width: 768px) {
+            .section { padding: 60px 0; }
+            .hero-section { min-height: 60vh; }
+            .feature-card, .profile-section { padding: 1.5rem; }
+            .tech-grid { grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); }
+        }
+    </style>
+</head>
+<body>
+    <section class="hero-section">
+        <div class="container hero-content">
+            <h1>About This Project</h1>
+            <p class="lead">An AI-powered Resume Toolkit built entirely by one developer using Django, Python, and modern web technologies.</p>
+            <a href="#features" class="btn-hero">
+                <i class="fas fa-rocket me-2"></i>Explore Features
+            </a>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="glass-card animate-on-scroll">
+                        <h2 class="section-title">Built by One Developer</h2>
+                        <p class="section-subtitle">This entire web application was conceptualized, designed, and developed by me, alone.</p>
+                        <p class="lead text-center">From user authentication and database models to AI integration and PDF processing — every component was implemented solo using <strong>Django</strong>, <strong>Python</strong>, and asynchronous programming.</p>
+                        <p class="text-center mt-4">This project demonstrates full-stack development skills, including backend logic, frontend design, security practices, and integration with AI agents for real-world use cases.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="features" class="section">
+        <div class="container">
+            <h2 class="section-title animate-on-scroll">Key Features I Built</h2>
+            <p class="section-subtitle animate-on-scroll">Powerful tools crafted with precision and innovation</p>
+            <div class="row g-4">
+                <div class="col-lg-6">
+                    <div class="feature-card animate-on-scroll">
+                        <div class="feature-icon"><i class="fas fa-file-alt"></i></div>
+                        <h4>AI Resume Enhancer</h4>
+                        <p>Uses <strong>crewAI agents</strong> to analyze and improve resumes based on job descriptions. Fully asynchronous backend ensures smooth performance.</p>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="feature-card animate-on-scroll">
+                        <div class="feature-icon"><i class="fas fa-search"></i></div>
+                        <h4>ATS Resume Scanner</h4>
+                        <p>Extracts text from uploaded PDF resumes and evaluates them against job descriptions — simulating how an <strong>ATS</strong> would score candidates.</p>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="feature-card animate-on-scroll">
+                        <div class="feature-icon"><i class="fas fa-cut"></i></div>
+                        <h4>Section-Based Editing</h4>
+                        <p>Upload resume PDFs, extract section headings, and enhance individual sections using AI — powered by custom Python logic and session storage.</p>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="feature-card animate-on-scroll">
+                        <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+                        <h4>Secure Admin Panel</h4>
+                        <p>Custom admin interface with user management: add, edit, delete users — built with Django's auth system and role-based access control.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title animate-on-scroll">Technologies & Tools</h2>
+            <p class="section-subtitle animate-on-scroll">Cutting-edge technologies powering this application</p>
+            <div class="tech-grid animate-on-scroll">
+                <div class="tech-badge"><i class="fab fa-python"></i><span>Django</span></div>
+                <div class="tech-badge"><i class="fab fa-python"></i><span>Python</span></div>
+                <div class="tech-badge"><i class="fab fa-html5"></i><span>HTML/CSS</span></div>
+                <div class="tech-badge"><i class="fab fa-bootstrap"></i><span>Bootstrap</span></div>
+                <div class="tech-badge"><i class="fas fa-sync-alt"></i><span>Async Views</span></div>
+                <div class="tech-badge"><i class="fas fa-file-pdf"></i><span>PDF Processing</span></div>
+                <div class="tech-badge"><i class="fas fa-robot"></i><span>CrewAI</span></div>
+                <div class="tech-badge"><i class="fas fa-lock"></i><span>Django Auth</span></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="profile-section animate-on-scroll">
+                        <img src="{% static 'images/img.png' %}" alt="Muhammad Asif" class="profile-img">
+                        <h3 class="profile-name">Muhammad Asif</h3>
+                        <p class="profile-title"><i class="fas fa-code me-2"></i>Full-Stack Developer | Django Specialist | AI Integrator</p>
+                        <div class="profile-description">
+                            <p>I built this project to master Django, explore AI integration in web apps, and solve real-world problems like job application challenges. Every line of code — from authentication to async AI agents — was written by me.</p>
+                            <p class="mt-3">This project reflects my ability to go from idea to production-ready application as a solo developer, showcasing modern web development practices and innovative AI integration.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; {{ year }} <strong>Muhammad Asif</strong> — All Rights Reserved</p>
+            <small>Built with Django, AI, and dedication — entirely by one developer.</small>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animated');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
+        });
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+</html>
 {% endblock body %}

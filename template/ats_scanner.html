@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATS Resume Scanner</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Responsive Navbar -->
+    <header class="bg-gray-800 text-white p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-xl md:text-2xl font-bold">ATS Resume Scanner</h1>
+
+            <!-- Desktop Navigation (Visible on medium and larger screens) -->
+            <nav class="hidden md:flex space-x-4">
+                <a href="{% url 'myapp:index' %}" class="px-4 py-2 hover:bg-gray-700 rounded-md">Home</a>
+                <a href="{% url 'resume_enhancer' %}" class="px-4 py-2 hover:bg-gray-700 rounded-md">Complete Resume Enhancer</a>
+                <a href="{% url 'section' %}" class="px-4 py-2 hover:bg-gray-700 rounded-md">Section Enhancer</a>
+                <form action="{% url 'logout' %}" method="post" class="inline-block ml-4">
+                    {% csrf_token %}
+                    <button type="submit" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-md">
+                        Logout
+                    </button>
+                </form>
+            </nav>
+
+            <!-- Mobile Menu Button -->
+            <div class="md:hidden">
+                <button id="menuButton" class="text-white focus:outline-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu (Hidden by default) -->
+        <nav id="mobileMenu" class="hidden bg-gray-800 px-4 pt-2 pb-4 flex-col space-y-3 md:hidden">
+            <a href="{% url 'myapp:index' %}" class="px-4 py-2 hover:bg-gray-700 rounded-md">Home</a>
+            <a href="{% url 'resume_enhancer' %}" class="px-4 py-2 hover:bg-gray-700 rounded-md">Complete Resume Enhancer</a>
+            <a href="{% url 'section' %}" class="px-4 py-2 hover:bg-gray-700 rounded-md">Section Enhancer</a>
+            <form action="{% url 'logout' %}" method="post" class="inline-block ml-4">
+                {% csrf_token %}
+                <button type="submit" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-md">
+                    Logout
+                </button>
+            </form>
+        </nav>
+    </header>
+
+    <!-- Main Content (Unchanged - Not Forced to Be Responsive) -->
+    <main class="flex-grow container mx-auto px-4 py-8">
+        <h2 class="text-3xl font-bold text-center text-gray-800 mb-6">Evaluate Your Resume with ATS</h2>
+
+        <!-- Django Messages -->
+        {% if messages %}
+            <ul class="list-none p-4 mb-4 rounded-md shadow-md bg-red-100 text-red-700">
+                {% for message in messages %}
+                    <li class="{{ message.tags }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <!-- Form -->
+        <div class="bg-white p-6 rounded-lg shadow-lg">
+            <form action="{% url 'ats_scanner' %}" method="post" enctype="multipart/form-data" class="space-y-6">
+                {% csrf_token %}
+                <div>
+                    <label for="id_job_description" class="block text-sm font-medium text-gray-700">Job Description:</label>
+                    <textarea 
+                        name="job_description" 
+                        id="id_job_description" 
+                        rows="8" 
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" 
+                        required>{{ job_description }}</textarea>
+                </div>
+
+                <div>
+                    <label for="id_resume_file" class="block text-sm font-medium text-gray-700">Upload Resume (PDF only):</label>
+                    <input 
+                        type="file" 
+                        name="resume_file" 
+                        id="id_resume_file" 
+                        accept=".pdf" 
+                        class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100" 
+                        required>
+                </div>
+                
+                <div class="flex space-x-4">
+                    <button type="submit" name="hr_review" class="flex-1 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        Tell Me About the Resume
+                    </button>
+                    <button type="submit" name="ats_match" class="flex-1 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                        Percentage Match
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Result Section -->
+        {% if response %}
+            <div class="mt-8 p-6 bg-gray-100 rounded-lg shadow-md">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">{{ title }}</h3>
+                <div class="prose max-w-none text-gray-700">
+                    <p>{{ response|safe }}</p>
+                </div>
+            </div>
+        {% endif %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white text-center p-4 shadow-inner mt-8">
+        <p>&copy; 2025 ATS Resume Scanner. All rights reserved.</p>
+    </footer>
+
+    <!-- JavaScript for Mobile Menu Toggle -->
+    <script>
+        const menuButton = document.getElementById('menuButton');
+        const mobileMenu = document.getElementById('mobileMenu');
+
+        menuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Optional: Close mobile menu when a link is clicked
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+    </script>
+
+</body>
+</html>

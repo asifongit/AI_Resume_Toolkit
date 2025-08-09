@@ -1,0 +1,151 @@
+<!-- login_app/templates/section_enhancer.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Resume Section Enhancer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800 flex flex-col min-h-screen">
+
+    <!-- Responsive Navbar -->
+    <header class="bg-gray-800 text-white p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold">Section Enhancer</h1>
+
+            <!-- Desktop Navigation (Visible on medium and larger screens) -->
+            <nav class="hidden md:flex space-x-4">
+                <a href="{% url 'myapp:index' %}" class="px-4 py-2 hover:bg-gray-700 rounded-md">Home</a>
+                <a href="{% url 'resume_enhancer' %}" class="px-4 py-2 hover:bg-gray-700 rounded-md">Complete Resume Enhancer</a>
+                <a href="{% url 'ats_scanner' %}" class="px-4 py-2 hover:bg-gray-700 rounded-md">ATS Resume Scanner</a>
+                <form action="{% url 'logout' %}" method="post" class="inline-block ml-4">
+                    {% csrf_token %}
+                    <button type="submit" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-md">
+                        Logout
+                    </button>
+                </form>
+            </nav>
+
+            <!-- Mobile Menu Button -->
+            <div class="md:hidden">
+                <button id="menuButton" class="text-white focus:outline-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu (Hidden by default, shown when button is clicked) -->
+        <nav id="mobileMenu" class="hidden bg-gray-800 px-4 pt-2 pb-4 flex-col space-y-3 md:hidden">
+            <a href="{% url 'myapp:index' %}" class="px-4 py-2 hover:bg-gray-700 rounded-md">Home</a>
+            <a href="{% url 'resume_enhancer' %}" class="px-4 py-2 hover:bg-gray-700 rounded-md">Complete Resume Enhancer</a>
+            <a href="{% url 'ats_scanner' %}" class="px-4 py-2 hover:bg-gray-700 rounded-md">ATS Resume Scanner</a>
+            <form action="{% url 'logout' %}" method="post" class="inline-block ml-4">
+                {% csrf_token %}
+                <button type="submit" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-md">
+                    Logout
+                </button>
+            </form>
+        </nav>
+    </header>
+
+    <!-- Main Content (Remains unchanged and not forced to be responsive) -->
+    <main class="container mx-auto px-4 py-8 flex-grow">
+        <h1 class="text-3xl font-bold mb-6 text-gray-900">AI-Powered Resume Section Enhancer</h1>
+
+        {% if messages %}
+            <div class="mb-6 space-y-2">
+                {% for message in messages %}
+                    <div class="p-4 rounded-lg {{ message.tags|yesno:'bg-green-100 text-green-700,bg-red-100 text-red-700' }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <!-- Upload Resume -->
+        <div class="bg-white shadow rounded-lg mb-6">
+            <div class="bg-gray-100 p-4 font-semibold border-b">Upload Your Resume (PDF)</div>
+            <div class="p-6">
+                <form method="post" enctype="multipart/form-data" class="space-y-4">
+                    {% csrf_token %}
+                    <div>
+                        <label for="resume_file" class="block text-gray-700 font-medium mb-1">Choose PDF File</label>
+                        <input type="file" id="resume_file" name="resume_file" accept=".pdf" required 
+                               class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 
+                                      file:rounded-full file:border-0 file:text-sm file:font-semibold 
+                                      file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
+                    </div>
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md shadow">
+                        Upload Resume
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        {% if resume_uploaded and headings %}
+        <!-- Headings Section -->
+        <div class="bg-white shadow rounded-lg mb-6">
+            <div class="bg-gray-100 p-4 font-semibold border-b">Extracted Sections/Headings</div>
+            <div class="p-6">
+                <p class="mb-3 text-gray-700">Click on a heading to enhance that section:</p>
+                <div class="flex flex-wrap gap-2">
+                    {% for heading in headings %}
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="selected_heading" value="{{ heading }}">
+                        <button type="submit" class="px-3 py-1 rounded-md border border-indigo-500 text-indigo-600 hover:bg-indigo-500 hover:text-white 
+                                {% if heading == selected_heading_display %}bg-indigo-500 text-white{% endif %}">
+                            {{ heading }}
+                        </button>
+                    </form>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if enhanced_section_result %}
+        <!-- Enhanced Section -->
+        <div class="bg-white shadow rounded-lg">
+            <div class="bg-gray-100 p-4 font-semibold border-b">
+                Enhanced Section: <strong>{{ selected_heading_display }}</strong>
+            </div>
+            <div class="p-6">
+                <pre class="whitespace-pre-wrap break-words font-sans text-gray-800">{{ enhanced_section_result }}</pre>
+            </div>
+        </div>
+        {% endif %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white text-center p-4 shadow-inner mt-8">
+        <p>&copy; 2025 AI Resume Section Enhancer. Powered by CrewAI & Django.</p>
+    </footer>
+
+    <!-- JavaScript for Mobile Menu Toggle -->
+    <script>
+        const menuButton = document.getElementById('menuButton');
+        const mobileMenu = document.getElementById('mobileMenu');
+
+        menuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Optional: Close mobile menu when a link is clicked
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+    </script>
+
+</body>
+</html>

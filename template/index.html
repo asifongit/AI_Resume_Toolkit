@@ -1,185 +1,374 @@
 {% extends "base.html" %}
 
-{% block title %}index{% endblock title %}
+{% block title %}Home{% endblock title %}
 
 {% block body %}
-<!-- 🔧 Logout Button -->
-<div class="container mt-3 d-flex justify-content-end">
-  <form action="{% url 'logout' %}" method="post">
-    {% csrf_token %}
-    <button type="submit" class="btn btn-danger">Logout</button>
-  </form>
-</div>
-
-
-
-
-<div class="container my-3 px-0">
-  <div id="carouselExample" class="carousel slide">
-    <div class="carousel-inner">
-      <div class="carousel-item active">
-        <img src="/static/images/nature.jfif" class="d-block w-100" alt="...">
-      </div>
-      <div class="carousel-item">
-        <img src="/static/images/paris.jfif" class="d-block w-100" alt="...">
-      </div>
-      <div class="carousel-item">
-        <img
-          src="https://images.unsplash.com/photo-1519068737630-e5db30e12e42?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-          class="d-block w-100" alt="...">
-      </div>
-    </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Previous</span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Next</span>
-    </button>
-  </div>
-</div>
-
-
-
-
-
-
-
-
 <style>
-  .head {
+  :root {
+    --bg-dark: #0a0a0a;
+    --bg-card: #1a1a1a;
+    --bg-gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    --accent: #6366f1;
+    --accent-hover: #5048e5;
+    --text-primary: #ffffff;
+    --text-secondary: #a0a0a0;
+    --border-color: #333;
+    --shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    --shadow-hover: 0 20px 40px rgba(0, 0, 0, 0.7);
+  }
+
+  body {
+    background: var(--bg-dark);
+    color: var(--text-primary);
+  }
+
+  /* Hero Carousel Styling */
+  .hero-carousel {
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    background: var(--bg-gradient);
+  }
+
+  .carousel-item {
+    height: 500px;
+    position: relative;
+  }
+
+  .carousel-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 1;
+  }
+
+  .carousel img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+  }
+
+  .carousel-caption {
+    position: absolute;
+    bottom: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
     text-align: center;
-    font-weight: bold;
-    font-size: x-large;
-    margin-bottom: 6px;
+  }
+
+  .carousel-caption h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+  }
+
+  .carousel-caption p {
+    font-size: 1.2rem;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+  }
+
+  .carousel-control-prev,
+  .carousel-control-next {
+    width: 5%;
+    opacity: 0.8;
+  }
+
+  .carousel-control-prev:hover,
+  .carousel-control-next:hover {
+    opacity: 1;
+  }
+
+  .carousel-indicators button {
+    background: var(--accent);
+    border-radius: 50%;
+    width: 12px;
+    height: 12px;
+    margin: 0 5px;
+  }
+
+  /* Section Styling */
+  .section-header {
+    text-align: center;
+    margin: 5rem 0 3rem 0;
+  }
+
+  .section-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 1rem;
+  }
+
+  .section-subtitle {
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+  }
+
+  /* Modern Card Styling */
+  .tool-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    overflow: hidden;
+    height: 100%;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+  }
+
+  .tool-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+  }
+
+  .tool-card:hover::before {
+    transform: scaleX(1);
+  }
+
+  .tool-card:hover {
+    transform: translateY(-15px) scale(1.02);
+    border-color: var(--accent);
+    box-shadow: var(--shadow-hover);
+  }
+
+  .card-img-top {
+    height: 200px;
+    object-fit: cover;
+    transition: all 0.3s ease;
+  }
+
+  .tool-card:hover .card-img-top {
+    transform: scale(1.1);
+  }
+
+  .card-body {
+    padding: 2rem;
+  }
+
+  .card-title {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+  }
+
+  .card-text {
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 0;
+  }
+
+  .card-footer {
+    background: transparent !important;
+    border-top: 1px solid var(--border-color);
+    padding: 1.5rem 2rem;
+  }
+
+  .btn-modern {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 0.75rem 2rem;
+    border-radius: 25px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(99, 102, 241, 0.3);
+  }
+
+  .btn-modern:hover {
+    background: var(--accent-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(99, 102, 241, 0.5);
+    color: white;
+  }
+
+  /* Footer Styling */
+  .modern-footer {
+    background: var(--bg-card);
+    border-top: 1px solid var(--border-color);
+    padding: 3rem 0;
+    margin-top: 6rem;
+    text-align: center;
+  }
+
+  .modern-footer p {
+    color: var(--text-secondary);
+    margin: 0;
+    font-size: 1rem;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .carousel-item {
+      height: 300px;
+    }
+    
+    .carousel-caption h2 {
+      font-size: 1.8rem;
+    }
+    
+    .carousel-caption p {
+      font-size: 1rem;
+    }
+    
+    .section-title {
+      font-size: 2rem;
+    }
+    
+    .tool-card {
+      margin-bottom: 2rem;
+    }
+  }
+
+  /* Animation */
+  .animate-on-scroll {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.6s ease;
+  }
+
+  .animate-on-scroll.animated {
+    opacity: 1;
+    transform: translateY(0);
   }
 </style>
 
-<div class="head" >Below is Thumnails</div>
-<div class="container">
-  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-    <div class="col">
-      <div class="card shadow-sm"> 
-        
-        <img 
-        src="https://images.unsplash.com/photo-1638602612226-55fd638475c9?q=80&w=1175&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
-        class="card-img-top" 
-        alt="..." 
-        style="width: 420px; height: 225px; object-fit: cover;">
-      
-        <div class="card-body">
-          <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional
-            content. This content is a little bit longer.</p>
-          <div class="d-flex justify-content-between align-items-center">
-            <div class="btn-group"> <button type="button" class="btn btn-sm btn-outline-secondary">View</button> <button
-                type="button" class="btn btn-sm btn-outline-secondary">Edit</button> </div> <small
-              class="text-body-secondary">9 mins</small>
-          </div>
+<!-- Hero Carousel Section -->
+<div class="container my-5">
+  <div id="mainCarousel" class="carousel slide hero-carousel" data-bs-ride="carousel">
+    <div class="carousel-indicators">
+      <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="0" class="active"></button>
+      <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="1"></button>
+      <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="2"></button>
+    </div>
+    <div class="carousel-inner">
+      <div class="carousel-item active" data-bs-interval="3000">
+        <img src="https://glider.ai/wp-content/uploads/aires.png" alt="AI Resume Enhancement">
+        <div class="carousel-caption">
+          <h2>AI-Powered Resume Enhancement</h2>
+          <p>Transform your resume with cutting-edge artificial intelligence</p>
+        </div>
+      </div>
+      <div class="carousel-item" data-bs-interval="3000">
+        <img src="https://kd-biz.scene7.com/is/image/kddibiz/hero_column42?obj=1699923647754&scl=1&fmt=png-alpha" alt="Smart Resume Tools">
+        <div class="carousel-caption">
+          <h2>Smart Resume Tools</h2>
+          <p>Professional tools designed for modern job seekers</p>
+        </div>
+      </div>
+      <div class="carousel-item" data-bs-interval="3000">
+        <img src="https://images.unsplash.com/photo-1727434032773-af3cd98375ba?q=80&w=1332&auto=format&fit=crop" alt="ATS Optimization">
+        <div class="carousel-caption">
+          <h2>ATS Optimization</h2>
+          <p>Ensure your resume passes through applicant tracking systems</p>
         </div>
       </div>
     </div>
-    <div class="col">
-      <div class="card shadow-sm"> 
-
-        <img 
-        src="https://images.unsplash.com/photo-1638602612226-55fd638475c9?q=80&w=1175&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
-        class="card-img-top" 
-        alt="..." 
-        style="width: 420px; height: 225px; object-fit: cover;">
-
-        <div class="card-body">
-          <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional
-            content. This content is a little bit longer.</p>
-          <div class="d-flex justify-content-between align-items-center">
-            <div class="btn-group"> <button type="button" class="btn btn-sm btn-outline-secondary">View</button> <button
-                type="button" class="btn btn-sm btn-outline-secondary">Edit</button> </div> <small
-              class="text-body-secondary">9 mins</small>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col">
-      <div class="card shadow-sm">
-        
-        <img 
-        src="https://images.unsplash.com/photo-1638602612226-55fd638475c9?q=80&w=1175&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
-        class="card-img-top" 
-        alt="..." 
-        style="width: 420px; height: 225px; object-fit: cover;">
-
-        <div class="card-body">
-          <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional
-            content. This content is a little bit longer.</p>
-          <div class="d-flex justify-content-between align-items-center">
-            <div class="btn-group"> <button type="button" class="btn btn-sm btn-outline-secondary">View</button> <button
-                type="button" class="btn btn-sm btn-outline-secondary">Edit</button> </div> <small
-              class="text-body-secondary">9 mins</small>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col">
-      <div class="card shadow-sm">
-        <img 
-        src="https://images.unsplash.com/photo-1638602612226-55fd638475c9?q=80&w=1175&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
-        class="card-img-top" 
-        alt="..." 
-        style="width: 420px; height: 225px; object-fit: cover;">
-
-        <div class="card-body">
-          <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional
-            content. This content is a little bit longer.</p>
-          <div class="d-flex justify-content-between align-items-center">
-            <div class="btn-group"> <button type="button" class="btn btn-sm btn-outline-secondary">View</button> <button
-                type="button" class="btn btn-sm btn-outline-secondary">Edit</button> </div> <small
-              class="text-body-secondary">9 mins</small>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col">
-      <div class="card shadow-sm"> 
-        <img 
-        src="https://images.unsplash.com/photo-1638602612226-55fd638475c9?q=80&w=1175&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
-        class="card-img-top" 
-        alt="..." 
-        style="width: 420px; height: 225px; object-fit: cover;">
-
-        <div class="card-body">
-          <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional
-            content. This content is a little bit longer.</p>
-          <div class="d-flex justify-content-between align-items-center">
-            <div class="btn-group"> <button type="button" class="btn btn-sm btn-outline-secondary">View</button> <button
-                type="button" class="btn btn-sm btn-outline-secondary">Edit</button> </div> <small
-              class="text-body-secondary">9 mins</small>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col">
-      <div class="card shadow-sm"> 
-        
-        <img 
-        src="https://images.unsplash.com/photo-1597440836382-e5f0bd6155f7?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
-        class="card-img-top" 
-        alt="..." 
-        style="width: 420px; height: 225px; object-fit: cover;">
-
-        <div class="card-body">
-          <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional
-            content. This content is a little bit longer.</p>
-          <div class="d-flex justify-content-between align-items-center">
-            <div class="btn-group"> <button type="button" class="btn btn-sm btn-outline-secondary">View</button> <button
-                type="button" class="btn btn-sm btn-outline-secondary">Edit</button> </div> <small
-              class="text-body-secondary">9 mins</small>
-          </div>
-        </div>
-      </div>
-    </div>
-    
+    <button class="carousel-control-prev" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon"></span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#mainCarousel" data-bs-slide="next">
+      <span class="carousel-control-next-icon"></span>
+    </button>
   </div>
-
 </div>
 
+<!-- Tools Section -->
+<div class="container">
+  <div class="section-header animate-on-scroll">
+    <h2 class="section-title">🚀 Professional Resume Tools</h2>
+    <p class="section-subtitle">Choose from our suite of AI-powered tools to create the perfect resume</p>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-lg-4 col-md-6">
+      <div class="tool-card animate-on-scroll">
+        <img src="https://dev-to-uploads.s3.amazonaws.com/uploads/articles/engzk6qfziulzvp9kjqc.png" class="card-img-top" alt="Resume Enhancer">
+        <div class="card-body">
+          <h5 class="card-title">🎯 Resume Enhancer</h5>
+          <p class="card-text">Optimize your resume with intelligent suggestions, keyword enhancement, and professional formatting.</p>
+        </div>
+        <div class="card-footer">
+          <a href="{% url 'resume_enhancer' %}" class="btn-modern">
+            <i class="fas fa-magic me-2"></i>Enhance Now
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-4 col-md-6">
+      <div class="tool-card animate-on-scroll">
+        <img src="https://www.salesforce.com/eu/blog/wp-content/uploads/sites/14/2025/01/Agentic_AI_Story_Header.webp?w=768&h=432" class="card-img-top" alt="Smart Editor">
+        <div class="card-body">
+          <h5 class="card-title">✏️ Smart Editor</h5>
+          <p class="card-text">Edit specific sections with AI-powered suggestions and real-time content optimization.</p>
+        </div>
+        <div class="card-footer">
+          <a href="{% url 'section' %}" class="btn-modern">
+            <i class="fas fa-edit me-2"></i>Start Editing
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-4 col-md-6">
+      <div class="tool-card animate-on-scroll">
+        <img src="https://plus.unsplash.com/premium_photo-1725985758251-b49c6b581d17?q=80&w=1170&auto=format&fit=crop" class="card-img-top" alt="ATS Scanner">
+        <div class="card-body">
+          <h5 class="card-title">🔍 ATS Scanner</h5>
+          <p class="card-text">Analyze your resume's ATS compatibility and get instant feedback on optimization opportunities.</p>
+        </div>
+        <div class="card-footer">
+          <a href="{% url 'ats_scanner' %}" class="btn-modern">
+            <i class="fas fa-search me-2"></i>Scan Resume
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modern Footer -->
+<!-- Modern Footer -->
+<footer class="modern-footer">
+  <div class="container">
+    <p>© {{ year|default:"2025" }} AI Resume Toolkit. Crafted with 💜 by Muhammad Asif</p>
+  </div>
+</footer>
+
+<!-- REQUIRED: Bootstrap JavaScript Bundle (Includes Carousel JS) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+  // Intersection Observer for animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('animated');
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
+  });
+</script>
 {% endblock body %}

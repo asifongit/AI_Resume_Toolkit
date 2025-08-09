@@ -1,5 +1,4 @@
 <!-- login_app/templates/resume_enhancer.html -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,45 +15,71 @@
         }
     </style>
 </head>
-<body class="bg-gray-100 text-gray-800">
+<body class="bg-gray-100 text-gray-800 flex flex-col min-h-screen">
 
-    <div class="container mx-auto p-4 md:p-8">
-        <header class="flex justify-between items-center mb-8">
-            <div>
-                <h1 class="text-4xl md:text-5xl font-bold text-gray-900">AI-Powered Resume Enhancer</h1>
-                <p class="text-lg text-gray-600 mt-2">Let our team of AI agents tailor your resume for your dream job.</p>
+    <!-- Responsive Navbar -->
+    <header class="bg-gray-800 text-white p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-xl md:text-2xl font-bold">AI-Powered Resume Enhancer</h1>
+
+            <!-- Desktop Nav (Visible on medium and larger screens) -->
+            <nav class="hidden md:flex space-x-4">
+                <a href="{% url 'myapp:index' %}" class="px-4 py-2 hover:bg-gray-700 rounded-md">Home</a>
+                <a href="{% url 'ats_scanner' %}" class="px-4 py-2 hover:bg-gray-700 rounded-md">ATS Resume Scanner</a>
+                <a href="{% url 'section' %}" class="px-4 py-2 hover:bg-gray-700 rounded-md">Section Enhancer</a>
+                <form action="{% url 'logout' %}" method="post" class="inline-block ml-4">
+                    {% csrf_token %}
+                    <button type="submit" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-md">
+                        Logout
+                    </button>
+                </form>
+            </nav>
+
+            <!-- Mobile Menu Button -->
+            <div class="md:hidden">
+                <button id="menuButton" class="text-white focus:outline-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
             </div>
-            <form action="{% url 'logout' %}" method="post">
+        </div>
+
+        <!-- Mobile Menu (Hidden by default) -->
+        <nav id="mobileMenu" class="hidden bg-gray-800 px-4 pt-2 pb-4 flex-col space-y-3 md:hidden">
+            <a href="{% url 'myapp:index' %}" class="px-4 py-2 hover:bg-gray-700 rounded-md">Home</a>
+            <a href="{% url 'ats_scanner' %}" class="px-4 py-2 hover:bg-gray-700 rounded-md">ATS Resume Scanner</a>
+            <a href="{% url 'section' %}" class="px-4 py-2 hover:bg-gray-700 rounded-md">Section Enhancer</a>
+            <form action="{% url 'logout' %}" method="post" class="inline-block ml-4">
                 {% csrf_token %}
-                <button type="submit" class="bg-red-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-red-700 focus:outline-none focus:ring-4 focus:ring-red-300 transition-transform transform hover:scale-105 duration-300 ease-in-out">
+                <button type="submit" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-md">
                     Logout
                 </button>
             </form>
-        </header>
+        </nav>
+    </header>
 
-        <main class="bg-white p-6 md:p-8 rounded-2xl shadow-lg">
-            
-            {% if error %}
-            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg relative mb-6" role="alert">
-                <strong class="font-bold">Oops!</strong>
-                <span class="block sm:inline">{{ error }}</span>
-            </div>
-            {% endif %}
+    <!-- Main Content (Unchanged - Not Forced to Be Responsive) -->
+    <main class="container mx-auto p-4 md:p-8 flex-grow">
+        
+        {% if error %}
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg relative mb-6" role="alert">
+            <strong class="font-bold">Oops!</strong>
+            <span class="block sm:inline">{{ error }}</span>
+        </div>
+        {% endif %}
 
+        <div class="bg-white p-6 md:p-8 rounded-2xl shadow-lg">
             <form action="{% url 'resume_enhancer' %}" method="POST">
                 {% csrf_token %}
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <!-- Resume Input -->
                     <div>
                         <label for="resume" class="block text-lg font-semibold mb-2 text-gray-700">Your Resume</label>
-                        <!-- CORRECTED: Using Django's 'default' filter -->
                         <textarea id="resume" name="resume" rows="15" class="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out" placeholder="Paste your full resume here...">{{ resume_text|default:"" }}</textarea>
                     </div>
 
-                    <!-- Job Description Input -->
                     <div>
                         <label for="job_description" class="block text-lg font-semibold mb-2 text-gray-700">Target Job Description</label>
-                        <!-- CORRECTED: Using Django's 'default' filter -->
                         <textarea id="job_description" name="job_description" rows="15" class="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out" placeholder="Paste the job description you are applying for...">{{ job_description_text|default:"" }}</textarea>
                     </div>
                 </div>
@@ -66,7 +91,6 @@
                 </div>
             </form>
 
-            <!-- Result Display -->
             {% if result %}
             <div id="result" class="mt-10 pt-8 border-t border-gray-200">
                 <h2 class="text-3xl font-bold text-center mb-6 text-gray-900">Your Enhanced Resume</h2>
@@ -75,12 +99,30 @@
                 </div>
             </div>
             {% endif %}
-        </main>
+        </div>
+    </main>
 
-        <footer class="text-center mt-8 text-gray-500">
-            <p>&copy; 2025 AI Resume Enhancer. Powered by CrewAI & Django.</p>
-        </footer>
-    </div>
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white text-center p-4 shadow-inner mt-8">
+        <p>&copy; 2025 AI Resume Enhancer. Powered by CrewAI & Django.</p>
+    </footer>
+
+    <!-- JavaScript for Mobile Menu Toggle -->
+    <script>
+        const menuButton = document.getElementById('menuButton');
+        const mobileMenu = document.getElementById('mobileMenu');
+
+        menuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Optional: Close mobile menu when a link is clicked
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+    </script>
 
 </body>
 </html>

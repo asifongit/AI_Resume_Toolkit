@@ -14,4 +14,7 @@ urlpatterns = [
     path('edit-user/<int:user_id>/', views.edit_user_view, name='edit_user'),
     path('delete-user/<int:user_id>/', views.delete_user_view, name='delete_user'),
     path('resume-enhancer/', views.resume_enhancer_view, name='resume_enhancer'),
+    path('section/', views.section_enhancer_view, name='section'),
+    # New URL for the ATS functionality
+    path('ats-scanner/', views.ats_scanner_view, name='ats_scanner'),
 ]

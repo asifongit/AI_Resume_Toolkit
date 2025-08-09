@@ -35,3 +35,5 @@ def contact(request):
         return redirect('myapp:contact')  # Redirect to avoid form resubmission
 
     return render(request, 'contact.html')
+
+
