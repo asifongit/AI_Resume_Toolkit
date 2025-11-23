@@ -1,0 +1,5 @@
+langchain_groq
+crewai
+django
+PyMuPDF       
+langchain_community
